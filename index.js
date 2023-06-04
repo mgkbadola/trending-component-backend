@@ -2,7 +2,7 @@ const express = require('express');
 const http = require('http');
 const cors = require('cors');
 
-const { fetchTrending, addArticle, addUser, modifyBehaviour } = require('./dbops');
+const { fetchTrending, addArticle, addUser, modifyBehaviour, getVisits, getArticles } = require('./dbops');
 
 var app = express();
 
@@ -23,10 +23,10 @@ app.use(express.urlencoded({extended: false}));
 
 app.get('/fetch-trending', fetchTrending);
 app.get('/modify-behaviour', modifyBehaviour);
-app.post('/add-article', addArticle);
-app.post('/add-user', addUser);
-
-module.exports = app;
+app.get('/get-visits', getVisits);
+app.get('/get-articles', getArticles);
+// app.post('/add-article', addArticle);
+// app.post('/add-user', addUser);
 
 function onError(error) {
   if (error.syscall !== 'listen') {
