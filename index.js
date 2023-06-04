@@ -26,6 +26,8 @@ app.get('/modify-behaviour', modifyBehaviour);
 app.post('/add-article', addArticle);
 app.post('/add-user', addUser);
 
+module.exports = app;
+
 function onError(error) {
   if (error.syscall !== 'listen') {
     throw error;
