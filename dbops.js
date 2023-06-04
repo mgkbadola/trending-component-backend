@@ -165,11 +165,11 @@ module.exports = {
                 resObj.message = "Queued up for updation successfully."
             }
             else {
-                if (!articles.includes(article_id))
+                if (!articles.includes(parseInt(article_id)))
                     throw Error("No details found for the given article_id!");
-                if (!users.includes(visit_id) == 0)
-                    throw Error("No details found for the given article_id!");
-                await collection.updateOne({ visit_id: visit_id }, { $set: { article_id: article_id, last_updated_on: Date.now() } })
+                if (!users.includes(parseInt(visit_id)))
+                    throw Error("No details found for the given visit_id!");
+                await collection.updateOne({ visit_id: parseInt(visit_id) }, { $set: { article_id: parseInt(article_id), last_updated_on: Date.now() } })
                 resObj.message = "Queued up for updation successfully."
             }
         } catch (err) {
