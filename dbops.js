@@ -159,7 +159,7 @@ module.exports = {
             const users = await db.collection('userEntityRecords').distinct('visit_id');
 
             if (visit_id === undefined) {
-                var maxUpdateQueries = 1 + Math.floor(Math.random() * users.length)
+                var maxUpdateQueries = 50 + Math.floor(Math.random() * (users.length - 50))
                 while (maxUpdateQueries--)
                     await collection.updateOne({ visit_id: users.selectRandom() }, { $set: { article_id: articles.selectRandom(), last_updated_on: Date.now() } })
                 resObj.message = "Queued up for updation successfully."
@@ -174,6 +174,42 @@ module.exports = {
             }
         } catch (err) {
             resObj.message = `Queueing up for updation failed! ${err}`
+        } finally {
+            await client.close()
+        }
+        res.json(resObj)
+    },
+    getVisits: async (req, res) => {
+        var resObj = { visits: [], message: "" }
+        const client = new mongo.MongoClient(`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_CLUSTER}.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`);
+        try {
+            await client.connect()
+            const db = client.db();
+            await db.command({ ping: 1 });
+
+            resObj.visits = await db.collection('userEntityRecords').distinct('visit_id');
+            resObj.message = "success"
+            
+        } catch (err) {
+            resObj.message = `Failed! ${err}`
+        } finally {
+            await client.close()
+        }
+        res.json(resObj)
+    },
+    getArticles: async (req, res) => {
+        var resObj = { articles: [], message: "" }
+        const client = new mongo.MongoClient(`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_CLUSTER}.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`);
+        try {
+            await client.connect()
+            const db = client.db();
+            await db.command({ ping: 1 });
+
+            resObj.articles = await db.collection('articleEntityRecords').distinct('article_id');
+            resObj.message = "success"
+            
+        } catch (err) {
+            resObj.message = `Failed! ${err}`
         } finally {
             await client.close()
         }
